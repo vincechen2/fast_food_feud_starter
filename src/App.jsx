@@ -1,7 +1,12 @@
-import * as React from "react"
+import * as React from "react";
 // IMPORT ANY NEEDED COMPONENTS HERE
-import { createDataSet } from "./data/dataset"
-import "./App.css"
+import { createDataSet } from "./data/dataset";
+import "./App.css";
+import Chip from "./components/Chip/Chip.jsx";
+import "./components/Chip/Chip.css";
+import Header from "./components/Header/Header.jsx";
+import Instructions from "./components/Instructions/Instructions.jsx";
+import NutritionalLabel from "./components/NutritionalLabel/NutritionalLabel.jsx";
 
 // don't move this!
 export const appInfo = {
@@ -16,42 +21,75 @@ export const appInfo = {
     noSelectedItem: `Almost there! Choose a menu item and you'll have the fast food facts right at your fingertips!`,
     allSelected: `Great choice! Amazing what a little knowledge can do!`,
   },
-}
+};
 // or this!
-const { data, categories, restaurants } = createDataSet()
+const { data, categories, restaurants } = createDataSet();
 
 export function App() {
+  let [category, setCategory] = React.useState(undefined);
+  let [restaurant, setRestaurant] = React.useState(undefined);
+  let [foodItem, setFoodItem] = React.useState(undefined);
+  function filterData() {
+    let filtered;
+    filtered = data.filter((item) => {
+      return item.food_category === category && item.restaurant === restaurant;
+    });
+
+    return filtered;
+  }
+
   return (
     <main className="App">
       {/* CATEGORIES COLUMN */}
       <div className="CategoriesColumn col">
         <div className="categories options">
           <h2 className="title">Categories</h2>
-          {/* YOUR CODE HERE */}
+
+          {categories.map((item, index) => {
+            // Replaced p tags with chip component
+            return <Chip label={item} key={index} setCategory={setCategory} />;
+          })}
         </div>
       </div>
 
       {/* MAIN COLUMN */}
       <div className="container">
         {/* HEADER GOES HERE */}
-
+        <Header data={appInfo} />
         {/* RESTAURANTS ROW */}
         <div className="RestaurantsRow">
           <h2 className="title">Restaurants</h2>
-          <div className="restaurants options">{/* YOUR CODE HERE */}</div>
+          <div className="restaurants options">
+            {restaurants.map((item, index) => {
+              return (
+                <Chip
+                  className="chip"
+                  key={index}
+                  label={item}
+                  setRestaurant={setRestaurant}
+                />
+              );
+            })}
+          </div>
         </div>
 
         {/* INSTRUCTIONS GO HERE */}
-
+        <Instructions data={appInfo.instructions} />
         {/* MENU DISPLAY */}
         <div className="MenuDisplay display">
           <div className="MenuItemButtons menu-items">
             <h2 className="title">Menu Items</h2>
-            {/* YOUR CODE HERE */}
+            {filterData().map((item, index) => {
+              console.log(item);
+              return <Chip label={item.item_name} key={index} />;
+            })}
           </div>
 
           {/* NUTRITION FACTS */}
-          <div className="NutritionFacts nutrition-facts">{/* YOUR CODE HERE */}</div>
+          {/* <NutritionalLabel /> */}
+          <div className="NutritionFacts nutrition-facts">
+            {/* YOUR CODE HERE */}
+          </div>
         </div>
 
         <div className="data-sources">
@@ -59,7 +97,7 @@ export function App() {
         </div>
       </div>
     </main>
-  )
+  );
 }
 
-export default App
+export default App;
