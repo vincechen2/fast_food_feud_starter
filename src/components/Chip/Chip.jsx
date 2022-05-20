@@ -3,13 +3,16 @@ import "./Chip.css";
 
 export function Chip({
   label = "",
-  isActive = true,
+  isActive = false,
+  setFoodItem = undefined,
   setRestaurant = undefined,
   setCategory = undefined,
 }) {
+  let c = "chip";
+  if (isActive) c = "chip active";
   return (
     <button
-      className="chip"
+      className={c}
       onClick={() => {
         if (setRestaurant) {
           setRestaurant(label);
@@ -17,10 +20,13 @@ export function Chip({
         if (setCategory) {
           setCategory(label);
         }
+        if (setFoodItem) {
+          setFoodItem(label);
+        }
       }}
     >
       <p className="label">{label}</p>
-      <span className="close" role="button"></span>
+      <span className="close" role="button">{`X`}</span>
     </button>
   );
 }

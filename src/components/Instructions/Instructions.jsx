@@ -1,12 +1,12 @@
-import * as React from "react"
-import "./Instructions.css"
+import * as React from "react";
+import "./Instructions.css";
 
-export function Instructions(props) {
+export function Instructions(instructions) {
   return (
     <aside className="instructions">
-      <p></p>
+      <p>{instructions.instructions}</p>
     </aside>
-  )
+  );
 }
 
-export default Instructions
+export default Instructions;

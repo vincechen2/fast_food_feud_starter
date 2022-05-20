@@ -29,6 +29,7 @@ export function App() {
   let [category, setCategory] = React.useState(undefined);
   let [restaurant, setRestaurant] = React.useState(undefined);
   let [foodItem, setFoodItem] = React.useState(undefined);
+
   function filterData() {
     let filtered;
     filtered = data.filter((item) => {
@@ -37,7 +38,20 @@ export function App() {
 
     return filtered;
   }
-
+  let nutrition = <div></div>;
+  if (
+    filterData().filter((item) => {
+      return foodItem === item.item_name;
+    }).length > 0
+  ) {
+    nutrition = (
+      <NutritionalLabel
+        item={filterData().filter((item) => {
+          return foodItem === item.item_name;
+        })}
+      />
+    );
+  }
   return (
     <main className="App">
       {/* CATEGORIES COLUMN */}
@@ -46,8 +60,18 @@ export function App() {
           <h2 className="title">Categories</h2>
 
           {categories.map((item, index) => {
+            let active = false;
+            if (item === category) active = true;
             // Replaced p tags with chip component
-            return <Chip label={item} key={index} setCategory={setCategory} />;
+            return (
+              <Chip
+                isActive={active}
+                className="chip"
+                label={item}
+                key={index}
+                setCategory={setCategory}
+              />
+            );
           })}
         </div>
       </div>
@@ -55,15 +79,21 @@ export function App() {
       {/* MAIN COLUMN */}
       <div className="container">
         {/* HEADER GOES HERE */}
-        <Header data={appInfo} />
+        <Header
+          title={appInfo.title}
+          tagline={appInfo.tagline}
+          description={appInfo.description}
+        />
         {/* RESTAURANTS ROW */}
         <div className="RestaurantsRow">
           <h2 className="title">Restaurants</h2>
           <div className="restaurants options">
             {restaurants.map((item, index) => {
+              let active = false;
+              if (item === restaurant) active = true;
               return (
                 <Chip
-                  className="chip"
+                  isActive={active}
                   key={index}
                   label={item}
                   setRestaurant={setRestaurant}
@@ -74,22 +104,29 @@ export function App() {
         </div>
 
         {/* INSTRUCTIONS GO HERE */}
-        <Instructions data={appInfo.instructions} />
+        <Instructions instructions={appInfo.instructions.start} />
         {/* MENU DISPLAY */}
         <div className="MenuDisplay display">
           <div className="MenuItemButtons menu-items">
             <h2 className="title">Menu Items</h2>
             {filterData().map((item, index) => {
-              console.log(item);
-              return <Chip label={item.item_name} key={index} />;
+              let active = false;
+              if (item.item_name === foodItem) active = true;
+              return (
+                <Chip
+                  isActive={active}
+                  label={item.item_name}
+                  key={index}
+                  setFoodItem={setFoodItem}
+                />
+              );
             })}
           </div>
 
           {/* NUTRITION FACTS */}
           {/* <NutritionalLabel /> */}
-          <div className="NutritionFacts nutrition-facts">
-            {/* YOUR CODE HERE */}
-          </div>
+
+          <div className="NutritionFacts nutrition-facts">{nutrition}</div>
         </div>
 
         <div className="data-sources">
